@@ -8,6 +8,8 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
+import Exector.Executor;
+
 /**
  * Created by jxzhong on 1/23/16.
  */
@@ -22,34 +24,10 @@ public class Hangman {
         this.targetWord = practiseWord;
         initPracticeWordDefaultTemplate(targetWord);
 
-        this.practiseWordTemplate = caculateTargetWord(this.basicFilter);
+        this.practiseWordTemplate = caculateTargetWord(basicFilter);
         this.tries = targetWord.length() + 1;
     }
 
-    private void initPracticeWordDefaultTemplate(String practiceWord) {
-        for (int i = 0; i < practiceWord.length(); i++) {
-            practiseWordTemplate = practiseWordTemplate.concat("_");
-        }
-    }
-
-
-    private String caculateTargetWord(String filter) {
-        StringBuilder practiceWordBuild = new StringBuilder();
-        char[] wordArray = targetWord.toCharArray();
-        char[] practiceWordxArry = practiseWordTemplate.toCharArray();
-        for (int i = 0; i < practiceWordxArry.length; i++) {
-            char currentType = getCurrentType(filter, practiceWordxArry[i], wordArray[i]);
-            practiceWordBuild.append(currentType);
-        }
-        return practiceWordBuild.toString();
-    }
-
-    private char getCurrentType(String filter, char currentType, char targetType) {
-        if (filter.contains(String.valueOf(targetType))) {
-            currentType = targetType;
-        }
-        return currentType;
-    }
 
     public String getPractiseWordTemplate() {
         return practiseWordTemplate;
@@ -71,17 +49,10 @@ public class Hangman {
     public Boolean caculate(String type) {
 
         String fillter = basicFilter.concat(type);
-        String newPracticeWord = caculateTargetWord(fillter);
-        Boolean isSuccess = !this.practiseWordTemplate.equals(newPracticeWord);
-        this.tries--;
-
-        if (isSuccess) {
-            this.practiseWordTemplate = newPracticeWord;
-            this.basicFilter = fillter;
-            this.tries++;
-        }
-
-        return isSuccess;
+        return caculateTargetWord(fillter, (s) -> {
+            practiseWordTemplate = s;
+            basicFilter = fillter;
+        }, (s) -> tries--);
     }
 
     public Boolean isWinTheGame() {
@@ -92,4 +63,42 @@ public class Hangman {
 
         return this.tries <= 0;
     }
+
+    private void initPracticeWordDefaultTemplate(String practiceWord) {
+        for (int i = 0; i < practiceWord.length(); i++) {
+            practiseWordTemplate = practiseWordTemplate.concat("_");
+        }
+    }
+
+
+    private Boolean caculateTargetWord(String filter, Executor<String> successCallBack, Executor<String> failedCallBack) {
+
+        String result = caculateTargetWord(filter);
+        boolean isSuccess = !result.equals(practiseWordTemplate);
+        if (isSuccess) {
+            successCallBack.apply(result);
+        } else {
+            failedCallBack.apply(result);
+        }
+        return isSuccess;
+    }
+
+    private String caculateTargetWord(String filter) {
+        StringBuilder practiceWordBuild = new StringBuilder();
+        char[] wordArray = targetWord.toCharArray();
+        char[] practiceWordxArry = practiseWordTemplate.toCharArray();
+        for (int i = 0; i < practiceWordxArry.length; i++) {
+            char currentType = getCurrentType(filter, practiceWordxArry[i], wordArray[i]);
+            practiceWordBuild.append(currentType);
+        }
+        return practiceWordBuild.toString();
+    }
+
+    private char getCurrentType(String filter, char currentType, char targetType) {
+        if (filter.contains(String.valueOf(targetType))) {
+            currentType = targetType;
+        }
+        return currentType;
+    }
+
 }

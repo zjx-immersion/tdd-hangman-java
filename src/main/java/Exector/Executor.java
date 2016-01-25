@@ -14,11 +14,7 @@ package Exector;
 import java.util.Optional;
 
 /**
- * Created by jxzhong on 1/25/16.
- */
-
-/**
- *
+ *Created by jxzhong on 1/25/16.
  * @param <T> is a optional input
  */
 public interface Executor<T> {

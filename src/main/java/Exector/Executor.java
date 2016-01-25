@@ -1,5 +1,7 @@
+
 /*
- * Copyright (c) 2016. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ * Copyright 2008 Google Inc.
+ *
  * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
  * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
  * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
@@ -8,13 +10,22 @@
 
 package Exector;
 
-import com.sun.istack.internal.Nullable;
+
+import java.util.Optional;
 
 /**
  * Created by jxzhong on 1/25/16.
  */
+
+/**
+ *
+ * @param <T> is a optional input
+ */
 public interface Executor<T> {
 
-    @Nullable
-    void apply(T t);
+    /**
+     * excute
+     * @param t for optional
+     */
+    void apply(Optional<T> t);
 }

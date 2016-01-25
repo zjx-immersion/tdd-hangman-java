@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2008 Google Inc.
  *
@@ -8,8 +7,9 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-import Exector.Executor;
+import java.util.Optional;
 
+import Exector.Executor;
 /**
  * Created by jxzhong on 1/23/16.
  */
@@ -28,7 +28,6 @@ public class Hangman {
         this.tries = targetWord.length() + 1;
     }
 
-
     public String getPractiseWordTemplate() {
         return practiseWordTemplate;
     }
@@ -42,7 +41,6 @@ public class Hangman {
     }
 
     public String getCaculatedWord() {
-
         return this.practiseWordTemplate;
     }
 
@@ -50,7 +48,7 @@ public class Hangman {
 
         String fillter = basicFilter.concat(type);
         return caculateTargetWord(fillter, (s) -> {
-            practiseWordTemplate = s;
+            practiseWordTemplate = s.get();
             basicFilter = fillter;
         }, (s) -> tries--);
     }
@@ -60,7 +58,6 @@ public class Hangman {
     }
 
     public Boolean isLoseTheGame() {
-
         return this.tries <= 0;
     }
 
@@ -70,15 +67,14 @@ public class Hangman {
         }
     }
 
-
-    private Boolean caculateTargetWord(String filter, Executor<String> successCallBack, Executor<String> failedCallBack) {
-
+    private Boolean caculateTargetWord(String filter, Executor<String> successCallBack,
+                                       Executor<String> failedCallBack) {
         String result = caculateTargetWord(filter);
         boolean isSuccess = !result.equals(practiseWordTemplate);
         if (isSuccess) {
-            successCallBack.apply(result);
+            successCallBack.apply(Optional.of(result));
         } else {
-            failedCallBack.apply(result);
+            failedCallBack.apply(Optional.empty());
         }
         return isSuccess;
     }
@@ -100,5 +96,4 @@ public class Hangman {
         }
         return currentType;
     }
-
 }

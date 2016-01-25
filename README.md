@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/zjx-immersion/tdd-hangman-java.svg?branch=master)](https://travis-ci.org/zjx-immersion/tdd-hangman-java.svg?branch=master)
 #Gradle + TDD + Java  first version
 
 >Todo:
